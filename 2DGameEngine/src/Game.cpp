@@ -60,7 +60,7 @@ void Game::Initialize() {
 }
 void Game::Setup() {
 	playerPosition = glm::vec2(10,20);
-	playerVelocity = glm::vec2(1,0);
+	playerVelocity = glm::vec2(10.0,0.0);
 }
 void Game::Destroy() {
 	SDL_DestroyRenderer(renderer);
@@ -92,30 +92,25 @@ void Game::ProcessInput() {
 }
 void Game::Update() {
 
-	// Get the current time in milliseconds since the SDL library initialization
+	// we could actually remove the frame rate cap logic now since we are using the deltaTime
 	int millisecsCurrentFrame = SDL_GetTicks();
 
-	// Calculate the elapsed time since the last frame was processed
 	int elapsedTime = millisecsCurrentFrame - millisecsPreviousFrame;
 
-	// Calculate the time to wait until the next frame should be processed
-	// how much we need to wait in milliseconds untill we reach the target milliseconds per frame
 	int timeToWait = MILLISECS_PER_FRAME - elapsedTime;
 
-	// the second check here is a safe guard for a case where timeToWait is negative which under normal circumstances should not occur
-	// this would represent a problem with the timing logic like system clock adjustmends or calculation errors
-	/*if (timeToWait > 0 && timeToWait <= MILLISECS_PER_FRAME) {
-		SDL_Delay(timeToWait);
-	}*/
 	if (timeToWait > 0) {
 		SDL_Delay(timeToWait);
 	}
 
+	// differente in ticks sonce the last frame, converted to seconds
+	double deltaTime = (SDL_GetTicks() - millisecsPreviousFrame) / 1000.0;
 
 	millisecsPreviousFrame = SDL_GetTicks();
 
-	playerPosition.x += playerVelocity.x;
-	playerPosition.y += playerVelocity.y;
+	// D = V * T
+	playerPosition.x += playerVelocity.x * deltaTime;
+	playerPosition.y += playerVelocity.y * deltaTime;
 }
 void Game::Render() {
 	SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);

@@ -4,7 +4,7 @@
 #include<SDL.h>
 
 // how many frames are refreshed in one second
-const int FPS = 30;
+const int FPS = 500;
 
 // how many secods takes a frame to last (or expected)
 const int MILLISECS_PER_FRAME = 1000 / FPS;
