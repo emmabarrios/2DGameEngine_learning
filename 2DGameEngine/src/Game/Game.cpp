@@ -3,6 +3,7 @@
 #include <SDL_image.h>
 #include <iostream>
 #include <glm/glm.hpp>
+#include "../Logger/Logger.h"
 
 //#include <chrono>
 //#include <thread>
@@ -13,14 +14,17 @@ glm::vec2 playerVelocity;
 
 Game::Game() {
 	isRunning = false;
-	std::cout << "Game Constructor Called\n";
+	Logger::Log("Game Constructor Called");
+	//std::cout << "Game Constructor Called\n";
 }
 Game::~Game() {
-	std::cout << "Game Destructor Called\n";
+	Logger::Err("Game Destructor Called");
+	//std::cout << "Game Destructor Called\n";
 }
 void Game::Initialize() {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-		std::cerr << "Error initializing SDL.\n";
+		Logger::Err("Error initializing SDL");
+		//std::cerr << "Error initializing SDL.\n";
 		return;
 	}
 
@@ -43,7 +47,8 @@ void Game::Initialize() {
 	
 	// window == NULL
 	if (!window) {
-		std::cerr << "Error creating SDL window.\n";
+		Logger::Err("Error creating SDL window");
+		//std::cerr << "Error creating SDL window.\n";
 		return;
 	}
 
@@ -51,7 +56,8 @@ void Game::Initialize() {
 
 	// renderer == NULL
 	if (!renderer) {
-		std::cerr << "Error creating SDL renderer.\n";
+		Logger::Err("Error creating SDL renderer");
+		//std::cerr << "Error creating SDL renderer.\n";
 	}
 
 	SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
@@ -60,7 +66,7 @@ void Game::Initialize() {
 }
 void Game::Setup() {
 	playerPosition = glm::vec2(10,20);
-	playerVelocity = glm::vec2(10.0,0.0);
+	playerVelocity = glm::vec2(50,0.0);
 }
 void Game::Destroy() {
 	SDL_DestroyRenderer(renderer);
@@ -93,15 +99,15 @@ void Game::ProcessInput() {
 void Game::Update() {
 
 	// we could actually remove the frame rate cap logic now since we are using the deltaTime
-	int millisecsCurrentFrame = SDL_GetTicks();
+	//int millisecsCurrentFrame = SDL_GetTicks();
 
-	int elapsedTime = millisecsCurrentFrame - millisecsPreviousFrame;
+	//int elapsedTime = millisecsCurrentFrame - millisecsPreviousFrame;
 
-	int timeToWait = MILLISECS_PER_FRAME - elapsedTime;
+	//int timeToWait = MILLISECS_PER_FRAME - elapsedTime;
 
-	if (timeToWait > 0) {
-		SDL_Delay(timeToWait);
-	}
+	//if (timeToWait > 0) {
+	//	SDL_Delay(timeToWait);
+	//}
 
 	// differente in ticks sonce the last frame, converted to seconds
 	double deltaTime = (SDL_GetTicks() - millisecsPreviousFrame) / 1000.0;
