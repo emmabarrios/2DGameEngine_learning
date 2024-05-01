@@ -92,23 +92,26 @@ void Game::ProcessInput() {
 }
 void Game::Update() {
 
+	// Get the current time in milliseconds since the SDL library initialization
+	int millisecsCurrentFrame = SDL_GetTicks();
 
-	int targetTime = millisecsPreviousFrame + MILLISECS_PER_FRAME;
+	// Calculate the elapsed time since the last frame was processed
+	int elapsedTime = millisecsCurrentFrame - millisecsPreviousFrame;
 
-	// Frame rate control: Delay updating the frame until the elapsed time reaches the target time.
-	// This ensures each frame maintains a consistent interval as defined by MILLISECS_PER_FRAME.
-	while (!SDL_TICKS_PASSED(SDL_GetTicks(), targetTime)) { 
-		/* we wait :) */ 
+	// Calculate the time to wait until the next frame should be processed
+	// how much we need to wait in milliseconds untill we reach the target milliseconds per frame
+	int timeToWait = MILLISECS_PER_FRAME - elapsedTime;
 
-		// uncle GPT suggested waiting a few milliseconds to yield the processor and not charge it with bussy waiting
-		// Reduce CPU usage by sleeping briefly
-		//std::this_thread::sleep_for(std::chrono::milliseconds(1));
-	};
+	// the second check here is a safe guard for a case where timeToWait is negative which under normal circumstances should not occur
+	// this would represent a problem with the timing logic like system clock adjustmends or calculation errors
+	/*if (timeToWait > 0 && timeToWait <= MILLISECS_PER_FRAME) {
+		SDL_Delay(timeToWait);
+	}*/
+	if (timeToWait > 0) {
+		SDL_Delay(timeToWait);
+	}
 
 
-	// Store the current frame time
-	// we need to know how much did the last frame last
-	// this function returns the current ticks(milliseconds) that we are running the program
 	millisecsPreviousFrame = SDL_GetTicks();
 
 	playerPosition.x += playerVelocity.x;
