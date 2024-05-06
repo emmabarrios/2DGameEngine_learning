@@ -4,6 +4,7 @@
 #include <iostream>
 #include <glm/glm.hpp>
 #include "../Logger/Logger.h"
+#include "../ECS/ECS.h"
 
 //#include <chrono>
 //#include <thread>
@@ -65,8 +66,7 @@ void Game::Initialize() {
 	isRunning = true;
 }
 void Game::Setup() {
-	playerPosition = glm::vec2(10,20);
-	playerVelocity = glm::vec2(50,0.0);
+
 }
 void Game::Destroy() {
 	SDL_DestroyRenderer(renderer);
@@ -98,48 +98,17 @@ void Game::ProcessInput() {
 }
 void Game::Update() {
 
-	// we could actually remove the frame rate cap logic now since we are using the deltaTime
-	//int millisecsCurrentFrame = SDL_GetTicks();
-
-	//int elapsedTime = millisecsCurrentFrame - millisecsPreviousFrame;
-
-	//int timeToWait = MILLISECS_PER_FRAME - elapsedTime;
-
-	//if (timeToWait > 0) {
-	//	SDL_Delay(timeToWait);
-	//}
-
-	// differente in ticks sonce the last frame, converted to seconds
 	double deltaTime = (SDL_GetTicks() - millisecsPreviousFrame) / 1000.0;
-
 	millisecsPreviousFrame = SDL_GetTicks();
 
-	// D = V * T
-	playerPosition.x += playerVelocity.x * deltaTime;
-	playerPosition.y += playerVelocity.y * deltaTime;
+
+
 }
 void Game::Render() {
 	SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
 	SDL_RenderClear(renderer);
 
 
-	/*SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-	SDL_Rect player = {10, 10, 20, 20};
-	SDL_RenderFillRect(renderer, &player);*/
-
-	//// Loads a png texture
-	SDL_Surface* surface = IMG_Load("./assets/images/tank-tiger-right.png");
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-	SDL_FreeSurface(surface);
-
-	//// place texture in the renderer at a destination location
-	SDL_Rect destRect = {
-		static_cast<int>(playerPosition.x), 
-		static_cast<int>(playerPosition.y),
-		32, 
-		32};
-	SDL_RenderCopy(renderer, texture, NULL, &destRect);
-	SDL_DestroyTexture(texture);
 
 	SDL_RenderPresent(renderer);
 }
