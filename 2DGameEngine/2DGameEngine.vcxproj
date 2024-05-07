@@ -280,6 +280,16 @@
     <ClInclude Include="src\Systems\MovementSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\tilemaps\jungle.map" />
+    <None Include="libFLAC-8.dll" />
+    <None Include="libfreetype-6.dll" />
+    <None Include="libjpeg-9.dll" />
+    <None Include="libmodplug-1.dll" />
+    <None Include="libmpg123-0.dll" />
+    <None Include="libogg-0.dll" />
+    <None Include="libopus-0.dll" />
+    <None Include="libopusfile-0.dll" />
+    <None Include="libpng16-16.dll" />
     <None Include="libs\glm\detail\func_common.inl" />
     <None Include="libs\glm\detail\func_common_simd.inl" />
     <None Include="libs\glm\detail\func_exponential.inl" />
@@ -412,6 +422,32 @@
     <None Include="libs\glm\gtx\vector_angle.inl" />
     <None Include="libs\glm\gtx\vector_query.inl" />
     <None Include="libs\glm\gtx\wrap.inl" />
+    <None Include="libs\glm\LICENSE" />
+    <None Include="libs\imgui\LICENSE" />
+    <None Include="libs\lua\LICENCE" />
+    <None Include="libs\sol\LICENCE" />
+    <None Include="libtiff-5.dll" />
+    <None Include="libvorbis-0.dll" />
+    <None Include="libvorbisfile-3.dll" />
+    <None Include="libwebp-7.dll" />
+    <None Include="lua53.dll" />
+    <None Include="SDL2.dll" />
+    <None Include="SDL2_image.dll" />
+    <None Include="SDL2_mixer.dll" />
+    <None Include="SDL2_ttf.dll" />
+    <None Include="x64\Debug\2DGameEngine.exe.recipe" />
+    <None Include="x64\Debug\2DGameEngine.tlog\2DGameEngine.lastbuildstate" />
+    <None Include="x64\Debug\2DGameEngine.tlog\CL.command.1.tlog" />
+    <None Include="x64\Debug\2DGameEngine.tlog\Cl.items.tlog" />
+    <None Include="x64\Debug\2DGameEngine.tlog\CL.read.1.tlog" />
+    <None Include="x64\Debug\2DGameEngine.tlog\CL.write.1.tlog" />
+    <None Include="x64\Debug\2DGameEngine.tlog\link.command.1.tlog" />
+    <None Include="x64\Debug\2DGameEngine.tlog\link.read.1.tlog" />
+    <None Include="x64\Debug\2DGameEngine.tlog\link.write.1.tlog" />
+    <None Include="x64\Debug\2DGameEngine.tlog\unsuccessfulbuild" />
+    <None Include="x64\Debug\vc143.idb" />
+    <None Include="x64\Debug\vc143.pdb" />
+    <None Include="zlib1.dll" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libs\glm\detail\glm.cpp" />
@@ -424,6 +460,56 @@
     <ClCompile Include="src\Logger\Logger.cpp" />
     <ClCompile Include="src\Game\Game.cpp" />
     <ClCompile Include="src\Game\Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="libs\lua\liblua53.a" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="x64\Debug\2DGameEngine.Build.CppClean.log" />
+    <Text Include="x64\Debug\2DGameEngine.log" />
+    <Text Include="x64\Debug\2DGameEngine.vcxproj.FileListAbsolute.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="x64\Debug\ECS.obj" />
+    <Object Include="x64\Debug\Game.obj" />
+    <Object Include="x64\Debug\glm.obj" />
+    <Object Include="x64\Debug\imgui.obj" />
+    <Object Include="x64\Debug\imgui_demo.obj" />
+    <Object Include="x64\Debug\imgui_draw.obj" />
+    <Object Include="x64\Debug\imgui_sdl.obj" />
+    <Object Include="x64\Debug\imgui_widgets.obj" />
+    <Object Include="x64\Debug\Logger.obj" />
+    <Object Include="x64\Debug\Main.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="assets\fonts\arial.ttf" />
+    <Font Include="assets\fonts\charriot.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\images\bullet.png" />
+    <Image Include="assets\images\chopper-spritesheet.png" />
+    <Image Include="assets\images\chopper.png" />
+    <Image Include="assets\images\landing-base.png" />
+    <Image Include="assets\images\radar.png" />
+    <Image Include="assets\images\takeoff-base.png" />
+    <Image Include="assets\images\tank-panther-down.png" />
+    <Image Include="assets\images\tank-panther-left.png" />
+    <Image Include="assets\images\tank-panther-right.png" />
+    <Image Include="assets\images\tank-panther-up.png" />
+    <Image Include="assets\images\tank-tiger-down.png" />
+    <Image Include="assets\images\tank-tiger-left.png" />
+    <Image Include="assets\images\tank-tiger-right.png" />
+    <Image Include="assets\images\tank-tiger-up.png" />
+    <Image Include="assets\images\tree.png" />
+    <Image Include="assets\images\truck-ford-down.png" />
+    <Image Include="assets\images\truck-ford-killed.png" />
+    <Image Include="assets\images\truck-ford-left.png" />
+    <Image Include="assets\images\truck-ford-right.png" />
+    <Image Include="assets\images\truck-ford-up.png" />
+    <Image Include="assets\tilemaps\jungle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="assets\sounds\helicopter.wav" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -478,8 +564,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>${SolutionDir}2DGameEngine\libs;$(SDL2DIR)\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SDL2DIR)\lib\x64;${SolutionDir}2DGameEngine\libs\lua;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)2DGameEngine\libs;$(SDL2DIR)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SDL2DIR)\lib\x64;$(SolutionDir)2DGameEngine\libs\lua;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
