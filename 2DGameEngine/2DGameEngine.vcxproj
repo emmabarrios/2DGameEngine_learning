@@ -478,8 +478,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\2DGameEngine\2DGameEngine\libs;D:\SDL2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\SDL2\lib\x64;D:\2DGameEngine\2DGameEngine\libs\lua;$(LibraryPath)</LibraryPath>
+    <IncludePath>${SolutionDir}2DGameEngine\libs;$(SDL2DIR)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SDL2DIR)\lib\x64;${SolutionDir}2DGameEngine\libs\lua;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
