@@ -10,7 +10,20 @@ private:
 	int id;
 public:
 	Entity(int id): id(id){};
+	//Entity(const Entity& entity) = default;
+
 	int GetId() const;
+
+	// operator overloading
+	// we are evaluating what it means for an entity to be == or != to another entity
+	bool operator == (const Entity& other) const {
+		return id == other.id;
+	}
+	bool operator != (const Entity& other) const {
+		return id != other.id;
+	}
+	// we can also overload the asignment operator
+	Entity& operator = (const Entity& other) = default;
 };
 
 struct IComponent {
