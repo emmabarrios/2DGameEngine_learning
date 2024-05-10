@@ -1,5 +1,8 @@
 #include "ECS.h"
 #include "../Logger/Logger.h"
+
+int IComponent::nextId = 1;
+
 int Entity::GetId() const {
 	return id;
 }
@@ -38,5 +41,22 @@ Entity Registry::CreateEntity() {
 }
 
 void Registry::Update() {
+
+}
+
+void Registry::AddEntityToSystems(Entity entity) {
+	const auto entityId = entity.GetId();
+	const auto& entityComponentSignature = entityComponentSignatures[entityId];
+
+	for (auto& system: systems) {
+		const auto& systemComponentSignature = system.second->GetComponentSignature();
+
+		// bitwise operation
+		bool isInterested = (entityComponentSignature & systemComponentSignature) == systemComponentSignature;
+		
+		if (isInterested) {
+			system.second->AddEntityToSystem(entity);
+		}
+	}
 
 }
