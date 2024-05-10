@@ -111,7 +111,7 @@ public:
 	template <typename TSystem> TSystem& GetSystem() const;
 
 	// Checks the component signature of an entity and add the entity to the systems that are interested in it
-	void AddEntityToSystems(Entity entity);
+	void AddEntityToSystems(Entity entity); 
 	
 };
 
