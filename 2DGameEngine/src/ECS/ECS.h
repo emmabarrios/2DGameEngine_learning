@@ -1,6 +1,9 @@
 #pragma once
 #include <bitset>
 #include <vector>
+#include <unordered_map>
+#include <typeindex>
+#include <set>
 
 const unsigned int MAX_COMPONENTS = 32;
 typedef std::bitset<MAX_COMPONENTS> Signature;
@@ -41,6 +44,11 @@ class Component: public IComponent {
 	}
 };
 
+/////////////////////////////////////////////////////////////////////////////////////////
+// System
+/////////////////////////////////////////////////////////////////////////////////////////
+// The system processes entities that contain a specific signature.
+/////////////////////////////////////////////////////////////////////////////////////////
 class System {
 private:
 	Signature componentSignature;
@@ -58,8 +66,83 @@ public:
 	template <typename TComponent> void RequiredComponent();
 };
 
-class Registry {
 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// Registry
+/////////////////////////////////////////////////////////////////////////////////////////
+// The Registry manages the creation of entities, add systems and components.
+/////////////////////////////////////////////////////////////////////////////////////////
+class Registry {
+private:
+	int numEntities = 0;
+	std::set<Entity> entitiesToBeAdded;
+	std::set<Entity> entitiesTobeKilled;
+
+	std::vector<IPool*> componentPools;
+
+	// Vector of component signatures per entity, saying which component is turned on for a given entity
+	// Vector index = entity id
+	std::vector<Signature> entityComponentSignatures;
+	std::unordered_map<std::type_index, System*> systems;
+public:
+	Registry()= default;
+	void Update();
+	Entity CreateEntity();
+	void AddEntityToSystem(Entity entity);
+
+	void KillEntity(Entity entity);
+	
+};
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// Pool
+/////////////////////////////////////////////////////////////////////////////////////////
+// Pool template class that will hold a vector of components of the same type.
+/////////////////////////////////////////////////////////////////////////////////////////
+class IPool {
+public:
+	virtual ~IPool() {};
+};
+
+template <typename T>
+class Pool: public IPool{
+private:
+	std::vector<T> data;
+public:
+	Pool(int size = 100) {
+		data.resize(size);
+	}
+
+	virtual ~Pool() = default; 
+
+	bool isEmpty() const {
+		return data.empty();
+	}
+	int GetSize() {
+		return data.size();
+	}
+	void Resize(int size) {
+		data.resize(size);
+	}
+	void Clear() {
+		data.clear();
+	}
+	void Add(T object) {
+		data.push_back(object);
+	}
+	void Set(int index, T object) {
+		data[index] = objectl;
+	}
+	T& Get(int index) {
+		return static_cast<T&>(data[index]);
+	}
+	T& operator [] (unsigned int index) {
+		return data[index];
+	}
 };
 
 // This is the standard way of writing template methods
