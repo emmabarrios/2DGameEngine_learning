@@ -87,12 +87,20 @@ private:
 	std::vector<Signature> entityComponentSignatures;
 	std::unordered_map<std::type_index, System*> systems;
 public:
-	Registry()= default;
+	Registry() = default;
+
+	// Registry update() finally processes the entities that are waiting to be added/killed
 	void Update();
+
+	// Entity management
 	Entity CreateEntity();
-	void AddEntityToSystem(Entity entity);
-	void KillEntity(Entity entity);
-	template <typename T, typename  TArgs> void AddComponent(Entity entity, TArgs args);
+
+	//void AddEntityToSystem(Entity entity);
+
+	//void KillEntity(Entity entity);
+
+	// Component management 
+	template <typename TComponent, typename ...TArgs> void AddComponent(Entity entity, TArgs&& ...args);
 	
 };
 
@@ -153,28 +161,43 @@ void System::RequiredComponent() {
 	componentSignature.set(componentId);
 }
 
-template<typename T, typename Targs>
-void Registry::AddComponent(Entity entity, Targs args) {
-	const auto componentId = Component<T>::GetId();
+template<typename TComponent, typename ...TArgs>
+void Registry::AddComponent(Entity entity, TArgs && ...args) {
+	const auto componentId = Component<TComponent>::GetId();
 	const auto entityId = entity.GetId();
 
+	// if the component id is greater than the current size of the componentPools, the resize the vector
 	if (componentId >= componentPools.size()) {
 		componentPools.resize(componentId + 1, nullptr);
 	}
 
+	// If we still dont have a pool for that component type, create one
+	// if(componentPools[componentId] == nullptr)
 	if (!componentPools[componentId]) {
-		Pool<T>* newComponentPool = new Pool<T>();
+		Pool<TComponent>* newComponentPool = new Pool<TComponent>();
 		componentPools[componentId] = newComponentPool;
 	}
 
-	Pool<T>* componentPool = Pool<T>(componentPools[componentId]);
+	// Get the pool of component values for that component type
+	Pool<TComponent>* componentPool = Pool<TComponent>(componentPools[componentId]);
 
 	// instead of manually dereferencing the pointer, we can use -> to call methods on the object it points to.
 	/*if (entityId >= (*componentPool).GetSize()) {
 		(*componentPool).Resize(numEntities);
 	}*/
 
+	// if the entity id is greater than the current size of the component pool, then resize the pool
 	if (entityId >= componentPool->GetSize()) {
 		componentPool->Resize(numEntities);
 	}
+
+	// Create a new Component object of type T, and forward the various parameters to the constructor of the component
+	TComponent newComponent(std::forward<TArgs>(args));
+
+	// Add the new component to the component pool list, using the entity id as an index
+	componentPool->Set(entityId, newComponent);
+
+	// Finally, change the component signature of the entity and set the component id on the bitset to 1
+	entityComponentSignatures[entityId].set(componentId);
 }
+
