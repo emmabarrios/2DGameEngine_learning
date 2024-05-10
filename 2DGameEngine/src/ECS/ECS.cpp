@@ -35,17 +35,24 @@ Entity Registry::CreateEntity() {
 	Entity entity(entityId);
 	entitiesToBeAdded.insert(entity);
 
+	if (entityId >= entityComponentSignatures.size()){
+		entityComponentSignatures.resize(entityId + 1);
+	}
+
 	Logger::Log("Entity created with id = " + std::to_string(entityId));
 
 	return entity;
 }
 
 void Registry::Update() {
+	for (auto entity: entitiesToBeAdded){
+		AddEntityToSystems(entity);
+	}
+	entitiesToBeAdded.clear();
 
 }
 
 
-// BIG BLACK BOXES FOR NOW
 void Registry::AddEntityToSystems(Entity entity) {
 	const auto entityId = entity.GetId();
 	const auto& entityComponentSignature = entityComponentSignatures[entityId];
@@ -60,5 +67,4 @@ void Registry::AddEntityToSystems(Entity entity) {
 			system.second->AddEntityToSystem(entity);
 		}
 	}
-
 }

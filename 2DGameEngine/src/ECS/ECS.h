@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <typeindex>
 #include <set>
+#include <memory>
 
 const unsigned int MAX_COMPONENTS = 32;
 typedef std::bitset<MAX_COMPONENTS> Signature;
@@ -24,6 +25,9 @@ public:
 	}
 	bool operator != (const Entity& other) const {
 		return id != other.id;
+	}
+	bool operator < (const Entity& other) const {
+		return id < other.id;
 	}
 	// we can also overload the asignment operator
 	Entity& operator = (const Entity& other) = default;
@@ -67,7 +71,52 @@ public:
 };
 
 
+/////////////////////////////////////////////////////////////////////////////////////////
+// Pool
+/////////////////////////////////////////////////////////////////////////////////////////
+// Pool template class that will hold a vector of components of the same type.
+/////////////////////////////////////////////////////////////////////////////////////////
+class IPool {
+public:
+	virtual ~IPool() {}
+};
 
+template <typename T>
+class Pool : public IPool {
+private:
+	std::vector<T> data;
+public:
+	Pool(int size = 100) {
+		data.resize(size);
+	}
+
+	virtual ~Pool() = default;
+
+	bool isEmpty() const {
+		return data.empty();
+	}
+	int GetSize() {
+		return data.size();
+	}
+	void Resize(int size) {
+		data.resize(size);
+	}
+	void Clear() {
+		data.clear();
+	}
+	void Add(T object) {
+		data.push_back(object);
+	}
+	void Set(int index, T object) {
+		data[index] = object;
+	}
+	T& Get(int index) {
+		return static_cast<T&>(data[index]);
+	}
+	T& operator [] (unsigned int index) {
+		return data[index];
+	}
+};
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Registry
@@ -116,53 +165,6 @@ public:
 };
 
 
-
-/////////////////////////////////////////////////////////////////////////////////////////
-// Pool
-/////////////////////////////////////////////////////////////////////////////////////////
-// Pool template class that will hold a vector of components of the same type.
-/////////////////////////////////////////////////////////////////////////////////////////
-class IPool {
-public:
-	virtual ~IPool() {};
-};
-
-template <typename T>
-class Pool: public IPool{
-private:
-	std::vector<T> data;
-public:
-	Pool(int size = 100) {
-		data.resize(size);
-	}
-
-	virtual ~Pool() = default; 
-
-	bool isEmpty() const {
-		return data.empty();
-	}
-	int GetSize() {
-		return data.size();
-	}
-	void Resize(int size) {
-		data.resize(size);
-	}
-	void Clear() {
-		data.clear();
-	}
-	void Add(T object) {
-		data.push_back(object);
-	}
-	void Set(int index, T object) {
-		data[index] = objectl;
-	}
-	T& Get(int index) {
-		return static_cast<T&>(data[index]);
-	}
-	T& operator [] (unsigned int index) {
-		return data[index];
-	}
-};
 
 // Component management functions
 template <typename TComponent>
@@ -228,17 +230,17 @@ bool Registry::HasComponent(Entity entity) const {
 }
 
 
-// System management functions: BIG BLACK BOXES FOR NOW
+// System management functions: black box, dont fully understand how unordered maps work
 template<typename TSystem, typename ...TArgs>
 void Registry::AddSystem(TArgs && ...args) {
-	TSystem* newSystem = new TSystem(std::forward<TArgs>(args)...));
+	TSystem* newSystem = new TSystem(std::forward<TArgs>(args)...);
 	systems.insert(std::make_pair(std::type_index(typeid(TSystem)), newSystem));
 }
 
 template<typename TSystem>
 inline void Registry::RemoveSystem() {
 	auto system = systems.find(std::type_index(typeid(TSystem)));
-	systems.erase(system)
+	systems.erase(system);
 }
 
 template<typename TSystem>

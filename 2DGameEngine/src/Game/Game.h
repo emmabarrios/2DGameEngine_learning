@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include<SDL.h>
+#include "../ECS/ECS.h"
 
 // how many frames are refreshed in one second
 const int FPS = 60;
@@ -15,6 +16,8 @@ private:
 	SDL_Renderer* renderer;
 	bool isRunning;
 	int millisecsPreviousFrame = 0;
+
+	Registry* registry;
 
 public:
 	Game();

@@ -15,6 +15,7 @@ glm::vec2 playerVelocity;
 
 Game::Game() {
 	isRunning = false;
+	registry = new Registry();
 	Logger::Log("Game Constructor Called");
 	//std::cout << "Game Constructor Called\n";
 }
@@ -66,7 +67,8 @@ void Game::Initialize() {
 	isRunning = true;
 }
 void Game::Setup() {
-
+	Entity tank = registry->CreateEntity();
+	Entity truck = registry->CreateEntity();
 }
 void Game::Destroy() {
 	SDL_DestroyRenderer(renderer);
