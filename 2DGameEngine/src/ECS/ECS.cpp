@@ -44,6 +44,8 @@ void Registry::Update() {
 
 }
 
+
+// BIG BLACK BOXES FOR NOW
 void Registry::AddEntityToSystems(Entity entity) {
 	const auto entityId = entity.GetId();
 	const auto& entityComponentSignature = entityComponentSignatures[entityId];

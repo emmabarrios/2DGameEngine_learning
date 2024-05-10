@@ -228,7 +228,7 @@ bool Registry::HasComponent(Entity entity) const {
 }
 
 
-// System management functions
+// System management functions: BIG BLACK BOXES FOR NOW
 template<typename TSystem, typename ...TArgs>
 void Registry::AddSystem(TArgs && ...args) {
 	TSystem* newSystem = new TSystem(std::forward<TArgs>(args)...));
