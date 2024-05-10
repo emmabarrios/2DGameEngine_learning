@@ -91,8 +91,8 @@ public:
 	void Update();
 	Entity CreateEntity();
 	void AddEntityToSystem(Entity entity);
-
 	void KillEntity(Entity entity);
+	template <typename T, typename  TArgs> void AddComponent(Entity entity, TArgs args);
 	
 };
 
@@ -151,4 +151,30 @@ template <typename TComponent>
 void System::RequiredComponent() {
 	const auto componentId = Component<TComponent>::GetId();
 	componentSignature.set(componentId);
+}
+
+template<typename T, typename Targs>
+void Registry::AddComponent(Entity entity, Targs args) {
+	const auto componentId = Component<T>::GetId();
+	const auto entityId = entity.GetId();
+
+	if (componentId >= componentPools.size()) {
+		componentPools.resize(componentId + 1, nullptr);
+	}
+
+	if (!componentPools[componentId]) {
+		Pool<T>* newComponentPool = new Pool<T>();
+		componentPools[componentId] = newComponentPool;
+	}
+
+	Pool<T>* componentPool = Pool<T>(componentPools[componentId]);
+
+	// instead of manually dereferencing the pointer, we can use -> to call methods on the object it points to.
+	/*if (entityId >= (*componentPool).GetSize()) {
+		(*componentPool).Resize(numEntities);
+	}*/
+
+	if (entityId >= componentPool->GetSize()) {
+		componentPool->Resize(numEntities);
+	}
 }
