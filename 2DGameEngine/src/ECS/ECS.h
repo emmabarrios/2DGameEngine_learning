@@ -10,6 +10,9 @@
 const unsigned int MAX_COMPONENTS = 32;
 typedef std::bitset<MAX_COMPONENTS> Signature;
 
+// Forward declaration, we create the class registry here and defined it below, this is so we can use the class Registry before its defined
+class Registry;
+
 class Entity {
 private:
 	int id;
@@ -24,6 +27,9 @@ public:
 	bool operator != (const Entity& other) const { return id != other.id; }
 	bool operator < (const Entity& other) const { return id < other.id; }
 	bool operator > (const Entity& other) const { return id > other.id; }
+
+	// Hold a pointer to the entity's owner registry
+	Registry* registry;
 };
 
 struct IComponent {
