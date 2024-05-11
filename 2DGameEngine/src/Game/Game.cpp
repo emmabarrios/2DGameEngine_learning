@@ -6,39 +6,29 @@
 #include "../Logger/Logger.h"
 #include "../ECS/ECS.h"
 
-//#include <chrono>
-//#include <thread>
-
-
 glm::vec2 playerPosition;
 glm::vec2 playerVelocity;
 
 Game::Game() {
 	isRunning = false;
-	registry = new Registry();
+	registry = std::make_unique<Registry>();
 	Logger::Log("Game Constructor Called");
-	//std::cout << "Game Constructor Called\n";
 }
 Game::~Game() {
 	Logger::Err("Game Destructor Called");
-	//std::cout << "Game Destructor Called\n";
 }
 void Game::Initialize() {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		Logger::Err("Error initializing SDL");
-		//std::cerr << "Error initializing SDL.\n";
 		return;
 	}
 
-	// Declares a variable of type SDL_DisplayMode and its passed as a reference to SDL_GetCurrentDisplayMode so it can be tampered in memory
 	SDL_DisplayMode displayMode;
 	SDL_GetCurrentDisplayMode(0, &displayMode);
 
 	windowWidth = 800;//displayMode.w;
 	windowHeight = 600;//displayMode.h;
 
-	// To open a window without a title, we pass NULL as the first parameter
-	// Creates an SDL_CreateWindow object in memory and return it's memory address
 	window = SDL_CreateWindow(
 		NULL, 
 		SDL_WINDOWPOS_CENTERED, 
@@ -47,19 +37,15 @@ void Game::Initialize() {
 		windowHeight,
 		SDL_WINDOW_BORDERLESS);
 	
-	// window == NULL
 	if (!window) {
 		Logger::Err("Error creating SDL window");
-		//std::cerr << "Error creating SDL window.\n";
 		return;
 	}
 
 	renderer = SDL_CreateRenderer(window, -1, 0);
 
-	// renderer == NULL
 	if (!renderer) {
 		Logger::Err("Error creating SDL renderer");
-		//std::cerr << "Error creating SDL renderer.\n";
 	}
 
 	SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);

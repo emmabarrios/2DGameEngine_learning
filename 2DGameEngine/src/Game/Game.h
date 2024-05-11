@@ -17,7 +17,7 @@ private:
 	bool isRunning;
 	int millisecsPreviousFrame = 0;
 
-	Registry* registry;
+	std::unique_ptr<Registry> registry;
 
 public:
 	Game();

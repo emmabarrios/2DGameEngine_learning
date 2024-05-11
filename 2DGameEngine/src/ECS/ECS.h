@@ -48,11 +48,7 @@ class Component: public IComponent {
 	}
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////
-// System
-/////////////////////////////////////////////////////////////////////////////////////////
-// The system processes entities that contain a specific signature.
-/////////////////////////////////////////////////////////////////////////////////////////
+
 class System {
 private:
 	Signature componentSignature;
@@ -71,11 +67,6 @@ public:
 };
 
 
-/////////////////////////////////////////////////////////////////////////////////////////
-// Pool
-/////////////////////////////////////////////////////////////////////////////////////////
-// Pool template class that will hold a vector of components of the same type.
-/////////////////////////////////////////////////////////////////////////////////////////
 class IPool {
 public:
 	virtual ~IPool() {}
@@ -118,23 +109,17 @@ public:
 	}
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////
-// Registry
-/////////////////////////////////////////////////////////////////////////////////////////
-// The Registry manages the creation of entities, add systems and components.
-/////////////////////////////////////////////////////////////////////////////////////////
+
 class Registry {
 private:
 	int numEntities = 0;
 	std::set<Entity> entitiesToBeAdded;
 	std::set<Entity> entitiesTobeKilled;
 
-	std::vector<IPool*> componentPools;
+	std::vector<std::shared_ptr<IPool>> componentPools;
 
-	// Vector of component signatures per entity, saying which component is turned on for a given entity
-	// Vector index = entity id
 	std::vector<Signature> entityComponentSignatures;
-	std::unordered_map<std::type_index, System*> systems;
+	std::unordered_map<std::type_index, std::shared_ptr<System>> systems;
 public:
 	Registry() = default;
 
@@ -143,10 +128,6 @@ public:
 
 	// Entity management
 	Entity CreateEntity();
-
-	//void AddEntityToSystem(Entity entity);
-
-	//void KillEntity(Entity entity);
 
 	// Component management 
 	template <typename TComponent, typename ...TArgs> void AddComponent(Entity entity, TArgs&& ...args);
@@ -163,7 +144,6 @@ public:
 	void AddEntityToSystems(Entity entity); 
 	
 };
-
 
 
 // Component management functions
@@ -183,20 +163,14 @@ void Registry::AddComponent(Entity entity, TArgs && ...args) {
 		componentPools.resize(componentId + 1, nullptr);
 	}
 
-	// If we still dont have a pool for that component type, create one
-	// if(componentPools[componentId] == nullptr)
 	if (!componentPools[componentId]) {
-		Pool<TComponent>* newComponentPool = new Pool<TComponent>();
+		std::shared_ptr <Pool<TComponent>> newComponentPool = std::make_shared<Pool<TComponent>>();
 		componentPools[componentId] = newComponentPool;
 	}
 
 	// Get the pool of component values for that component type
-	Pool<TComponent>* componentPool = Pool<TComponent>(componentPools[componentId]);
+	std::shared_ptr<Pool<TComponent>> componentPool = std::static_pointer_cast<Pool<TComponent>>(componentPools[componentId]);
 
-	// instead of manually dereferencing the pointer, we can use -> to call methods on the object it points to.
-	/*if (entityId >= (*componentPool).GetSize()) {
-		(*componentPool).Resize(numEntities);
-	}*/
 
 	// if the entity id is greater than the current size of the component pool, then resize the pool
 	if (entityId >= componentPool->GetSize()) {
@@ -233,7 +207,7 @@ bool Registry::HasComponent(Entity entity) const {
 // System management functions: black box, dont fully understand how unordered maps work
 template<typename TSystem, typename ...TArgs>
 void Registry::AddSystem(TArgs && ...args) {
-	TSystem* newSystem = new TSystem(std::forward<TArgs>(args)...);
+	std::shared_ptr<TSystem> newSystem = std::make_shared<TSystem>(std::forward<TArgs>(args)...);
 	systems.insert(std::make_pair(std::type_index(typeid(TSystem)), newSystem));
 }
 
