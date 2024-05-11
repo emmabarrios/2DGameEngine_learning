@@ -5,6 +5,7 @@
 #include <typeindex>
 #include <set>
 #include <memory>
+#include "../Logger/Logger.h"
 
 const unsigned int MAX_COMPONENTS = 32;
 typedef std::bitset<MAX_COMPONENTS> Signature;
@@ -42,6 +43,7 @@ protected:
 template <typename T>
 class Component: public IComponent {
 	// Returns the unique id of component<T>
+public:
 	static int GetId(){
 		static auto id = nextId++;
 		return id;
@@ -178,13 +180,15 @@ void Registry::AddComponent(Entity entity, TArgs && ...args) {
 	}
 
 	// Create a new Component object of type T, and forward the various parameters to the constructor of the component
-	TComponent newComponent(std::forward<TArgs>(args));
+	TComponent newComponent(std::forward<TArgs>(args)...);
 
 	// Add the new component to the component pool list, using the entity id as an index
 	componentPool->Set(entityId, newComponent);
 
 	// Finally, change the component signature of the entity and set the component id on the bitset to 1
 	entityComponentSignatures[entityId].set(componentId);
+
+	Logger::Log("Component id: " + std::to_string(componentId) + " was added to entity id: " + std::to_string(entityId));
 }
 
 template<typename TComponent>
