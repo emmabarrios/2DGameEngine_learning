@@ -58,8 +58,12 @@ void Game::Setup() {
 	// Create an entity
 	Entity tank = registry->CreateEntity();
 	// Add some components to that entity
-	registry->AddComponent<TransformComponent>(tank, glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
-	registry->AddComponent<RigidBodyComponent>(tank, glm::vec2(50.0, 0.0));
+	
+	// Now the component can call the registry methods through the pointer to registry within the component
+	// registry->AddComponent<TransformComponent>(tank, glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
+	// registry->AddComponent<RigidBodyComponent>(tank, glm::vec2(50.0, 0.0));
+
+	tank.AddComponent<TransformComponent>(glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
 }
 void Game::Destroy() {
 	SDL_DestroyRenderer(renderer);

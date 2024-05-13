@@ -33,6 +33,7 @@ const Signature& System::GetComponentSignature() const{
 Entity Registry::CreateEntity() {
 	int entityId = numEntities++;
 	Entity entity(entityId);
+	entity.registry = this; // this is referring to the registry class, like in C#
 	entitiesToBeAdded.insert(entity);
 
 	if (entityId >= entityComponentSignatures.size()){

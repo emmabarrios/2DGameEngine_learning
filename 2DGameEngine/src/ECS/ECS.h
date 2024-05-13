@@ -10,9 +10,6 @@
 const unsigned int MAX_COMPONENTS = 32;
 typedef std::bitset<MAX_COMPONENTS> Signature;
 
-// Forward declaration, we create the class registry here and defined it below, this is so we can use the class Registry before its defined
-class Registry;
-
 class Entity {
 private:
 	int id;
@@ -22,14 +19,21 @@ public:
 
 	int GetId() const;
 
+	// Operation overloading
 	Entity& operator = (const Entity& other) = default;
 	bool operator == (const Entity& other) const { return id == other.id; }
 	bool operator != (const Entity& other) const { return id != other.id; }
 	bool operator < (const Entity& other) const { return id < other.id; }
 	bool operator > (const Entity& other) const { return id > other.id; }
 
+	// Specify what registry is here 
 	// Hold a pointer to the entity's owner registry
-	Registry* registry;
+	class Registry* registry;
+
+	template <typename TComponent, typename ...TArgs> void AddComponent(TArgs&& ...args);
+	template <typename TComponent> void RemoveComponent();
+	template <typename TComponent> bool HasComponent() const;
+	template <typename TComponent> TComponent& GetComponent() const;
 };
 
 struct IComponent {
@@ -37,7 +41,6 @@ protected:
 	static int nextId;
 };
 
-// Used to assign a unique id to a component type
 template <typename T>
 class Component: public IComponent {
 	// Returns the unique id of component<T>
@@ -133,6 +136,7 @@ public:
 	template <typename TComponent, typename ...TArgs> void AddComponent(Entity entity, TArgs&& ...args);
 	template <typename TComponent> void RemoveComponent(Entity entity);
 	template <typename TComponent> bool HasComponent(Entity entity) const;
+	template <typename TComponent> TComponent& GetComponent (Entity entity) const;
 
 	// System management
 	template <typename TSystem, typename ...TArgs> void AddSystem(TArgs&& ...args);
@@ -205,6 +209,14 @@ bool Registry::HasComponent(Entity entity) const {
 	return entityComponentSignatures[entityId].test(componentId);
 }
 
+template<typename TComponent>
+TComponent& Registry::GetComponent(Entity entity) const {
+	const auto componentId = Component<TComponent>::GetId();
+	const auto entityId = entity.GetId();
+	auto componentPool = std::static_pointer_cast<Pool<TComponent>> componentPools[componentId];
+	return componentPool->Get(entityId);
+}
+
 
 // System management functions: black box, dont fully understand how unordered maps work
 template<typename TSystem, typename ...TArgs>
@@ -230,3 +242,22 @@ TSystem& Registry::GetSystem() const {
 	return *(std::static_pointer_cast<TSystem>(system->second));
 }
 
+template<typename TComponent, typename ...TArgs>
+void Entity::AddComponent(TArgs && ...args) {
+	registry->AddComponent<TComponent>(*this, std::forward<TArgs>(args)...;
+}
+
+template<typename TComponent>
+void Entity::RemoveComponent() {
+	registry->RemoveComponent<TComponent>(*this);
+}
+
+template<typename TComponent>
+bool Entity::HasComponent() const {
+	registry->HasComponent<TComponent>(*this);
+}
+
+template<typename TComponent>
+TComponent& Entity::GetComponent() const {
+	registry->GetComponent<TComponent>(*this);
+}
