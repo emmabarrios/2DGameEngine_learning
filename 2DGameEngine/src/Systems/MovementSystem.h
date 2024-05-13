@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include "../ECS/ECS.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/RigidBodyComponent.h"
@@ -25,6 +26,8 @@ public:
 
 			transform.position.x += rigidBody.velocity.x;
 			transform.position.y += rigidBody.velocity.y;
+
+			Logger::Log("Entity id: " + std::to_string(entity.GetId()) + " position is now (" + std::to_string(transform.position.x) + ", " + std::to_string(transform.position.y) + ")");
 		}
 	}
 };
