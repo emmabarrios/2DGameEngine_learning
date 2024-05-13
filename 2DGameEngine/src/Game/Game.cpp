@@ -68,8 +68,8 @@ void Game::Setup() {
 	Entity tank = registry->CreateEntity();
 
 	tank.AddComponent<TransformComponent>(glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
-	tank.AddComponent<RigidBodyComponent>(glm::vec2(10.0, 50.0));
-	tank.AddComponent<SpriteComponent>(10, 10);
+	tank.AddComponent<RigidBodyComponent>(glm::vec2(100.0, 10.0));
+	tank.AddComponent<SpriteComponent>(50, 50);
 
 }
 void Game::Destroy() {
