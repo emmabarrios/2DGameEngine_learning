@@ -103,6 +103,9 @@ void Game::Update() {
 
 	// Ask all the systems to update
 	registry->GetSystem<MovementSystem>().Update();
+
+	// Update at the end the registry to process the entities that are waiting to be created/deleted
+	registry->Update();
 }
 void Game::Render() {
 	SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
