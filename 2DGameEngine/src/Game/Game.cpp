@@ -7,6 +7,7 @@
 #include "../ECS/ECS.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/RigidBodyComponent.h"
+#include "../Systems/MovementSystem.h"
 
 glm::vec2 playerPosition;
 glm::vec2 playerVelocity;
@@ -55,15 +56,12 @@ void Game::Initialize() {
 	isRunning = true;
 }
 void Game::Setup() {
-	// Create an entity
-	Entity tank = registry->CreateEntity();
-	// Add some components to that entity
-	
-	// Now the component can call the registry methods through the pointer to registry within the component
-	// registry->AddComponent<TransformComponent>(tank, glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
-	// registry->AddComponent<RigidBodyComponent>(tank, glm::vec2(50.0, 0.0));
 
-	// Add some components to that entity
+	// Add the systems that need to be processed in our game
+	registry->AddSystem<MovementSystem>();
+
+	Entity tank = registry->CreateEntity();
+
 	tank.AddComponent<TransformComponent>(glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
 	tank.AddComponent<RigidBodyComponent>(glm::vec2(10.0, 50.0));
 
@@ -103,8 +101,8 @@ void Game::Update() {
 	double deltaTime = (SDL_GetTicks() - millisecsPreviousFrame) / 1000.0;
 	millisecsPreviousFrame = SDL_GetTicks();
 
-
-
+	// Ask all the systems to update
+	registry->GetSystem<MovementSystem>().Update();
 }
 void Game::Render() {
 	SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
