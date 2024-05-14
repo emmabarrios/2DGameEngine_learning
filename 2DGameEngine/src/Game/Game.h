@@ -3,6 +3,7 @@
 
 #include<SDL.h>
 #include "../ECS/ECS.h"
+#include "../AssetBank/AssetBank.h"
 
 // how many frames are refreshed in one second
 const int FPS = 60;
@@ -18,6 +19,7 @@ private:
 	int millisecsPreviousFrame = 0;
 
 	std::unique_ptr<Registry> registry;
+	std::unique_ptr<AssetBank> assetBank;
 
 public:
 	Game();
