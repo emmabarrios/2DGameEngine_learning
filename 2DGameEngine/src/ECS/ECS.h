@@ -105,7 +105,10 @@ public:
 		data[index] = object;
 	}
 	T& Get(int index) {
-		return static_cast<T&>(data[index]);
+		//return static_cast<T&>(data[index]);
+
+		// GPT says this already returns a reference to the element of type T
+		return data[index];
 	}
 	T& operator [] (unsigned int index) {
 		return data[index];
